@@ -1,0 +1,47 @@
+#include "DHT.h"
+
+//#define DHTTYPE DHT11
+#define DHTTYPE DHT22
+
+const int DHTPin1 = 7;
+const int DHTPin2 = 6;
+const int DHTPin3 = 5;
+const int DHTPin4 = 4;
+
+float t1;
+float t2;
+float t3;
+float t4;
+
+float t;
+float h;
+ 
+DHT dht1(DHTPin1, DHTTYPE);
+DHT dht2(DHTPin2, DHTTYPE);
+DHT dht3(DHTPin3, DHTTYPE);
+DHT dht4(DHTPin4, DHTTYPE);
+ 
+void setup() {
+   Serial.begin(9600);
+   dht1.begin();
+   dht2.begin();
+   dht3.begin();
+   dht4.begin();
+}
+ 
+void loop() {
+   delay(2000);
+ 
+   t1 = dht1.readTemperature();  
+   t2 = dht2.readTemperature();
+   t3 = dht3.readTemperature();
+   t4 = dht4.readTemperature();
+ 
+   if (isnan(h) || isnan(t)) {
+      return;
+   }
+   Serial.println(t1);
+   Serial.println(t2);
+   Serial.println(t3);
+   Serial.println(t4);
+}
