@@ -1,0 +1,32 @@
+thermalmodel = createpde('thermal','steadystate');
+importGeometry(thermalmodel,'Skin.stl');
+pdegplot(thermalmodel,'FaceAlpha',0.01)
+
+figure
+pdegplot(thermalmodel,'FaceLabels','on')
+view(30,30);
+title('Bracket with Face Labels')
+
+generateMesh(thermalmodel,'Hmax',0.05);
+thermalmodel.Mesh
+pdemesh(thermalmodel)
+
+xLength = max(thermalmodel.Mesh.Nodes(1,:)) - min(thermalmodel.Mesh.Nodes(1,:))
+yLength = max(thermalmodel.Mesh.Nodes(2,:)) - min(thermalmodel.Mesh.Nodes(2,:))
+zLength = max(thermalmodel.Mesh.Nodes(3,:)) - min(thermalmodel.Mesh.Nodes(3,:))
+
+thermalProperties(thermalmodel,'Cell',1,'ThermalConductivity',0.396);
+
+thermalBC(thermalmodel,'Face',26:thermalmodel.Geometry.NumFaces,'ConvectionCoefficient',10,'AmbientTemperature',297);
+
+thermalBC(thermalmodel,'Face',5,'Temperature',310);
+thermalBC(thermalmodel,'Face',26,'Temperature',301);
+thermalBC(thermalmodel,'Face',27,'Temperature',303);
+thermalBC(thermalmodel,'Face',28,'Temperature',303);
+
+tic
+results = solve(thermalmodel);
+time = toc
+
+t_max = max(results.Temperature)
+pdeplot3D(thermalmodel,'ColorMapData',results.Temperature)
